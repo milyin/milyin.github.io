@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tetris Game</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+    </style>
+    <script src="../js/tetris_game.js"></script>
+    <script src="../js/tetris_draw.js"></script>
+</head>
+
+<body>
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+        var tetrisGame = new TetrisGame(20, 10);
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTetrisGame(tetrisGame, ctx);
+        }
+
+        function setCanvasSize(width, height) {
+            canvas.width = width;
+            canvas.height = height;
+            redraw();
+        }
+
+        function resizeCanvas() {
+            setCanvasSize(window.innerWidth, window.innerHeight);
+        }
+        resizeCanvas();
+
+        window.addEventListener('resize', function () {
+            resizeCanvas();
+        });
+
+        setInterval(function () {
+            if (tetrisGame.isLocked()) {
+                if (!tetrisGame.newFigure()) {
+                    alert("Game Over");
+                    tetrisGame = new TetrisGame(20, 10);
+                }
+            } else {
+                tetrisGame.moveDown();
+            }
+        }, 1000);
+
+        setInterval(function () {
+            tetrisGame.blast();
+        }, 10);
+
+        setInterval(function () {
+            tetrisGame.fall();
+        }, 3000);
+
+        setInterval(function () {
+            tetrisGame.step();
+            if (tetrisGame.isBlasted()) {
+                setTimeout(function () {
+                    tetrisGame.clearBlast();
+                }, 500);
+            }
+            redraw();
+        }, 1);
+
+        document.addEventListener('keydown', function (event) {
+            switch (event.keyCode) {
+                case 37: // Left arrow or "a"
+                case 65:
+                    tetrisGame.moveLeft();
+                    break;
+                case 38: // Up arrow or "w"
+                case 87:
+                    tetrisGame.rotateRight();
+                    break;
+                case 39: // Right arrow or "d"
+                case 68:
+                    tetrisGame.moveRight();
+                    break;
+                case 40: // Down arrow or "s"
+                case 83:
+                    tetrisGame.moveDown();
+                    break;
+                case 32: // Space bar
+                    // tetrisGame.drop();
+                    break;
+            }
+        });
+
+    </script>
+</body>
+
+</html>
