@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Change to the directory where the script is located
-pushd "$(dirname "$0")" > /dev/null
+# Save the current script directory to an absolute path
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+
+# Change to the script directory
+pushd "$script_dir" > /dev/null
 
 # Create a temporary directory and clone the repository
 temp_dir=$(mktemp -d)
@@ -15,7 +18,7 @@ yarn install
 yarn build
 
 # Copy necessary files to the root zenoh-tetris directory
-cp -r dist/* ../../zenoh-tetris/
+cp -r dist/* "$script_dir/../zenoh-tetris/"
 
 # Navigate back to the script directory
 popd > /dev/null
