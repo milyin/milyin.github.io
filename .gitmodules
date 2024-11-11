@@ -1,0 +1,3 @@
+[submodule "submodules/zenoh-tetris"]
+	path = submodules/zenoh-tetris
+	url = git@github.com:milyin/zenoh-tetris.git
